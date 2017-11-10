@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CrashHandlerApp</string>
+    <string name="txt_crash_handler">Crash Handler Restarted Activity</string>
 </resources>

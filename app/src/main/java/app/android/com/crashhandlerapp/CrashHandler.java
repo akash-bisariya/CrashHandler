@@ -19,6 +19,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         this.exceptionHandler = exceptionHandler;
 
 
+        /* *
+         Registering the lifecycle callback of activities
+        * */
         application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle bundle) {
@@ -60,6 +63,14 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     }
 
+    /**
+     * @param thread
+     * @param throwable
+     *
+     * Restarting activity if the exception is thrown for the first time only.
+     * The Deafault Exception handler will handle the exception if the same exception within the same activity occurs second time to avoid the loop.
+     *
+     */
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
 
@@ -76,6 +87,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         if (isRestarted || isSameException(throwable, lastException) || lastStartedActivity==null) {
 
             Log.d("App Crash Handler", "This crash is handled by system");
+
+            //Setting the default system exception if the same exception occurred second time.
+
             exceptionHandler.uncaughtException(thread, throwable);
 
         } else if(lastStartedActivity!=null){
@@ -95,6 +109,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
 
+    /**
+     * @param currentException
+     * @param lastException
+     * @return
+     * Comparing the exception with the previous exception.
+     * Return True if exception repeats otherwise False.
+     */
     private boolean isSameException(Throwable currentException, Throwable lastException) {
         return lastException != null && (currentException.getClass() == lastException.getClass() && currentException.getStackTrace() == lastException.getStackTrace() && currentException.getMessage().equals(lastException.getMessage()));
     }

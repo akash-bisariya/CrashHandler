@@ -13,13 +13,9 @@ public class MyApplicationClass extends Application {
         super.onCreate();
     }
 
-    @Override
-    public void registerComponentCallbacks(ComponentCallbacks callback) {
-        super.registerComponentCallbacks(callback);
-
-    }
-
-
+    /**
+     * Setting the default uncaught exception handler that will handle all the uncaught exceptions.
+     */
     public void setCrashHandler()
     {
         Thread.setDefaultUncaughtExceptionHandler(new CrashHandler(Thread.getDefaultUncaughtExceptionHandler(), MyApplicationClass.this));

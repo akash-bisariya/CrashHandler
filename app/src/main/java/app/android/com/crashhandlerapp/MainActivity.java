@@ -21,16 +21,17 @@ public class MainActivity extends AppCompatActivity {
         tvMessage = findViewById(R.id.tv_message);
         if(getIntent().getBooleanExtra("RESTARTED", false))
         {
-            tvMessage.setText("Crash Handler Restarted Activity");
+            tvMessage.setText(R.string.txt_crash_handler);
         }
 
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String text = etInputText.getText().toString();
 
-                //Through Exception
+                //Throw Exception through accessing the empty string.
                 text.charAt(3);
 
             }
