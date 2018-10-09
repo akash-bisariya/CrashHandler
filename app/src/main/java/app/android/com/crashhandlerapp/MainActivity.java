@@ -1,5 +1,12 @@
 package app.android.com.crashhandlerapp;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnSubmit;
     EditText etInputText;
     TextView tvMessage;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +32,21 @@ public class MainActivity extends AppCompatActivity {
             tvMessage.setText(R.string.txt_crash_handler);
         }
 
+        SharedPreferences sharedPreferences = getSharedPreferences("CrashData",Context.MODE_PRIVATE);
+        Boolean isDataPosted =  sharedPreferences.getBoolean("isPostData",false);
+
+
+        /**
+         * Sending Crash-Report to server after checking whether it has been sent previously or not
+         */
+        if(!isDataPosted)
+        {
+            JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            jobScheduler.schedule(new JobInfo.Builder(11111,new ComponentName(this,CrashJobService.class))
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .build());
+
+        }
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
